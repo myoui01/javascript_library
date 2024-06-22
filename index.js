@@ -1,4 +1,3 @@
-// Definição da classe Book
 function Book(title, author, pages, read) {
   this.title = title;
   this.author = author;
@@ -6,19 +5,12 @@ function Book(title, author, pages, read) {
   this.read = read;
 }
 
-// Função para criar um novo card de livro e adicioná-lo à tela
 function addBookToLibrary(title, author, genre, pages, read) {
-  // Criar um novo objeto Book
   var newBook = new Book(title, author, pages, read);
-
-  // Selecionar a seção onde os cards serão exibidos
   var cardContainer = document.querySelector('.card-container');
-
-  // Criar um novo elemento div para o card do livro
   var card = document.createElement('div');
+  
   card.classList.add('card');
-
-  // Montar o conteúdo do card com base nos dados do novo livro
   card.innerHTML = `
     <img src="imgs/book-placeholder.jpg" alt="Placeholder do Livro">
     <div class="card-content">
@@ -32,8 +24,6 @@ function addBookToLibrary(title, author, genre, pages, read) {
       </div>
     </div>
   `;
-
-  // Adicionar o novo card à seção de cards existente
   cardContainer.appendChild(card);
 }
 
@@ -69,14 +59,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var pages = document.getElementById('pages').value;
     var read = document.getElementById('is-read').checked;
 
-    // Adicionar o novo livro à biblioteca (DOM)
     addBookToLibrary(title, author, genre, pages, read);
 
-    // Fechar o modal após adicionar o livro
     modal.style.display = 'none';
     bg.style.display = 'none';
 
-    // Limpar os campos do formulário (opcional)
     form.reset();
   });
 });
