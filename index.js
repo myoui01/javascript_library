@@ -1,141 +1,82 @@
-function Book (title, author, pages, read) {
+// Definição da classe Book
+function Book(title, author, pages, read) {
   this.title = title;
   this.author = author;
   this.pages = pages;
   this.read = read;
-  this.info = function () {
-    const read = this.read ? 'read' : 'not read';
-    return `${this.title} by ${this.author}, ${this.pages} páginas, ${read}`;
-  };
 }
 
-function addBookToLibrary (title, author, pages, read) {
-  const newBook = new Book(title, author, pages, read);
-  myLibrary.push(newBook);
+// Função para criar um novo card de livro e adicioná-lo à tela
+function addBookToLibrary(title, author, genre, pages, read) {
+  // Criar um novo objeto Book
+  var newBook = new Book(title, author, pages, read);
+
+  // Selecionar a seção onde os cards serão exibidos
+  var cardContainer = document.querySelector('.card-container');
+
+  // Criar um novo elemento div para o card do livro
+  var card = document.createElement('div');
+  card.classList.add('card');
+
+  // Montar o conteúdo do card com base nos dados do novo livro
+  card.innerHTML = `
+    <img src="imgs/book-placeholder.jpg" alt="Placeholder do Livro">
+    <div class="card-content">
+      <div class="card-title">${newBook.title}</div>
+      <div class="card-author">${newBook.author} • ${genre}</div>
+      <div class="card-bottom">
+        <div class="card-pags">${newBook.pages} pages</div>
+        <div class="card-icon">
+          <img src="imgs/yes.png" alt="check">
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Adicionar o novo card à seção de cards existente
+  cardContainer.appendChild(card);
 }
 
-function displayBooks() {
-  for (let i = 0; i < myLibrary.length; i++) {
-    const book = document.createElement('div');
-    book.classList.add('book');
+document.addEventListener('DOMContentLoaded', function() {
+  var modal = document.getElementById('myModal');
+  var bg = document.querySelector('.bg');
+  var btn = document.querySelector('.botao');
+  var span = document.getElementsByClassName('close')[0];
+  var form = document.getElementById('bookForm');
 
-    const title = document.createElement('h4');
-    title.classList.add('title');
-    title.innerHTML = myLibrary[i].title;
-
-    const author = document.createElement('p');
-    author.classList.add('author');
-    author.innerHTML = myLibrary[i].author;
-
-    const pages = document.createElement('p');
-    pages.classList.add('pages');
-    pages.innerHTML = myLibrary[i].pages + ' páginas';
-
-    book.appendChild(title);
-    book.appendChild(author);
-    book.appendChild(pages);
-
-    booksContainer.append(book);
+  btn.onclick = function() {
+    modal.style.display = 'block';
+    bg.style.display = 'flex';
   }
-}
 
-const myLibrary = [];
-const menu = document.querySelector('.menu');
-const headerNav = document.querySelector('.header-nav');
-const booksContainer = document.querySelector('.main');
+  span.onclick = function() {
+    modal.style.display = 'none';
+    bg.style.display = 'none';
+  }
 
-function removeBookAndUpdateDisplay (bookIndex) {
-  myLibrary.splice(bookIndex, 1);
-  booksContainer.innerHTML = '';
-  displayBooks();
-}
-
-function enableReadButton() {
-  const readButtons = document.querySelectorAll('.read');
-
-  readButtons.forEach((readButton) => {
-    readButton.addEventListener('click', () => {
-      const bookIndex = readButton.dataset.book;
-      if (myLibrary[bookIndex].read === 0) {
-        myLibrary[bookIndex].read = 1;
-      } else {
-        myLibrary[bookIndex].read = 0;
-      }
-      readButton.textContent = myLibrary[bookIndex].read ? 'Lido' : 'Não lido';
-    });
-  });
-}
-
-function enableRemoveButton () {
-  const removeButtons = document.querySelectorAll('.remove');
-
-  removeButtons.forEach((removeButton) => {
-    removeButton.addEventListener('click', () => {
-      const bookIndex = removeButton.dataset.book;
-      removeBookAndUpdateDisplay(bookIndex);
-    });
-  });
-}
-
-addBookToLibrary('Cracking the Coding Interview', 'Gayle McDowell', 708, 0);
-addBookToLibrary('The Mythical Man-Month', 'Fred Brooks', 336, 0);
-addBookToLibrary('Code Complete', 'Steve McConnell', 960, 0);
-addBookToLibrary('Programming Pearls', 'Jon Bentley', 256, 0);
-addBookToLibrary('Code: The Hidden Language of Computer Hardware and Software', 'Charles Petzold', 400, 0);
-addBookToLibrary('Introduction to the Theory of Computation', 'Michael Sipser', 456, 0);
-addBookToLibrary('Gödel, Escher, Bach: An Eternal Golden Braid', 'Douglas R. Hofstadter', 756, 0);
-
-
-menu.addEventListener('click', () => {
-  headerNav.classList.toggle('toggle');
-});
-
-displayBooks();
-
-let readButtons = document.querySelectorAll('.read');
-let removeButtons = document.querySelectorAll('.remove');
-
-const modal = document.querySelector('dialog');
-const form = document.querySelector('form');
-const addBook = document.querySelector('form button');
-const close = document.querySelector('form svg');
-const titleInput = document.getElementById('title');
-const authorInput = document.getElementById('author');
-const pagesInput = document.getElementById('pages');
-const readInput = document.getElementById('read');
-
-const addBookButtons = document.querySelectorAll('.add');
-addBookButtons.forEach((addBook) => {
-  addBook.addEventListener('click', () => {
-    modal.showModal();
-    if (addBook.parentElement.classList.contains('header-nav')) {
-      headerNav.classList.toggle('toggle');
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = 'none';
+      bg.style.display = 'none';
     }
+  }
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    var title = document.getElementById('title').value;
+    var author = document.getElementById('author').value;
+    var genre = document.getElementById('genre').value;
+    var pages = document.getElementById('pages').value;
+    var read = document.getElementById('is-read').checked;
+
+    // Adicionar o novo livro à biblioteca (DOM)
+    addBookToLibrary(title, author, genre, pages, read);
+
+    // Fechar o modal após adicionar o livro
+    modal.style.display = 'none';
+    bg.style.display = 'none';
+
+    // Limpar os campos do formulário (opcional)
+    form.reset();
   });
 });
-
-close.addEventListener('click', () => modal.close());
-
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  const title = titleInput.value;
-  const author = authorInput.value;
-  const pages = parseInt(pagesInput.value);
-  const readingStatus = readInput.checked ? 1 : 0;
-
-  addBookToLibrary(title, author, pages, readingStatus);
-
-  booksContainer.innerHTML = '';
-  displayBooks();
-
-  enableReadButton();
-  enableRemoveButton();
-
-  form.reset();
-});
-
-addBook.addEventListener('click', (e) => {
-  modal.close();
-});
-
